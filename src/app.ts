@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Routes
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (req: Request, res: any) => {
   res.send("Welcome to the University Management System API!");
 });
 
