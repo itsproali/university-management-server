@@ -15,8 +15,6 @@ const run = async () => {
     });
   } catch (error: any) {
     logger.error(error.message);
-    // -------- save logs --------
-    // logger.error(error.message);
   }
 };
 
