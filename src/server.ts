@@ -1,7 +1,7 @@
-import connectDB from "./utils/connectDB";
 import app from "./app";
-import colors from "colors";
 import config from "./config";
+import connectDB from "./utils/connectDB";
+import logger from "./utils/logger";
 
 // Run the server
 const run = async () => {
@@ -11,10 +11,12 @@ const run = async () => {
 
     // Start the server
     app.listen(config.PORT, () => {
-      console.log(colors.blue(`Server listening on port: ${config.PORT}`));
+      logger.info(`Server listening on port: ${config.PORT}`);
     });
   } catch (error: any) {
-    console.log(error.message);
+    logger.error(error.message);
+    // -------- save logs --------
+    // logger.error(error.message);
   }
 };
 

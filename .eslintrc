@@ -11,7 +11,7 @@
     ],
     "rules": {
         "no-unused-vars": "warn",
-        "@typescript-eslint/consistent-type-definitions": ["error", "type", "interface"],
+        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
         "no-console": "warn",
         "no-undef":"error",
         "no-unused-expressions": "error",
