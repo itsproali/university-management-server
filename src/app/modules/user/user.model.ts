@@ -11,7 +11,7 @@ type UserModel = Model<IUser, object, IUserMethods>;
 const userSchema: Schema = new Schema<IUser, UserModel, IUserMethods>(
   {
     id: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
     },
