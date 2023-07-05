@@ -1,11 +1,5 @@
-import { Model, Schema, model } from "mongoose";
-import { IUser } from "./user.interface";
-
-type IUserMethods = {
-  getRole(): string;
-};
-
-type UserModel = Model<IUser, object, IUserMethods>;
+import { Schema, model } from "mongoose";
+import { IUser, IUserMethods, UserModel } from "./user.interface";
 
 // User Schema
 const userSchema: Schema = new Schema<IUser, UserModel, IUserMethods>(

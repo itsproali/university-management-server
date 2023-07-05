@@ -1,6 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+/* eslint-disable no-unused-vars */
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import config from "../config";
 import sendResponse from "./sendResponse";
+import { RequestHandler } from "express-serve-static-core";
 
 // create  error class for our custom errors
 export class ApiError extends Error {
@@ -15,11 +17,11 @@ export class ApiError extends Error {
 }
 
 // Global Error Handler
-export const globalErrorHandler = (
+export const globalErrorHandler: ErrorRequestHandler = (
   err: ApiError,
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req,
+  res,
+  next
 ) => {
   err.statusCode = err.statusCode || 500;
   err.message = err.message || "Something went wrong!";
@@ -34,4 +36,17 @@ export const globalErrorHandler = (
     message: err.message,
     stack: config.isDevelopment ? err.stack : undefined,
   });
+};
+
+// Catch Async Errors
+type IFunction = (
+  req: Request,
+  res: Response,
+  next?: NextFunction
+) => Promise<void>;
+
+export const asyncHandler = (fn: IFunction): RequestHandler => {
+  return (req: Request, res: Response, next?: NextFunction) => {
+    fn(req, res, next).catch(next);
+  };
 };
