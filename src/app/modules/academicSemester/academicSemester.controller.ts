@@ -1,5 +1,5 @@
-import asyncHandler from "../../utils/errors/asyncHandler";
-import sendResponse from "../../utils/sendResponse";
+import asyncHandler from "../../../utils/errors/asyncHandler";
+import sendResponse from "../../../utils/sendResponse";
 import { createSemesterService } from "./academicSemester.service";
 
 export const createSemester = asyncHandler(async (req, res) => {

@@ -1,7 +1,7 @@
 import { createLogger, format, transports, Logger } from "winston";
 const { combine, timestamp, printf, colorize, prettyPrint } = format;
 import DailyRotateFile from "winston-daily-rotate-file";
-import config from "../../config";
+import config from "../config";
 
 // Format log messages
 const myFormat = printf(({ level, message }) => {

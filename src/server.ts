@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import app from "./app";
 import config from "./config";
-import connectDB from "./app/utils/connectDB";
-import logger from "./app/utils/logger";
+
 import { Server } from "http";
+import logger from "./utils/logger";
+import connectDB from "./utils/connectDB";
 
 // Uncaught exception
 process.on("uncaughtException", (err: any) => {

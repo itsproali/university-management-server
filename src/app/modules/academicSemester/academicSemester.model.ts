@@ -4,8 +4,9 @@ import {
   IAcademicSemesterModel,
 } from "./academicSemester.interface";
 import { months } from "./academicSemester.utils";
-import ApiError from "../../utils/errors/ApiError";
+
 import httpStatus from "http-status";
+import ApiError from "../../../utils/errors/ApiError";
 
 const academicSemesterSchema: Schema = new Schema<IAcademicSemester>(
   {

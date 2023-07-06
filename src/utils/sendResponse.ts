@@ -4,6 +4,10 @@ interface IApiResponse<T> {
   statusCode: number;
   success: boolean;
   message?: string;
+  errorMessages?: {
+    path: string | number;
+    message: string;
+  }[];
   data?: T | null;
   stack?: string;
   metaData?: {
@@ -18,8 +22,9 @@ type ApiResponseWithoutStatusCode<T> = Omit<IApiResponse<T>, "statusCode">;
 
 const sendResponse = <T>(res: Response, resData: IApiResponse<T>): void => {
   const data: ApiResponseWithoutStatusCode<T> = {
-    success: resData?.success || true,
+    success: resData?.success,
     message: resData?.message || undefined,
+    errorMessages: resData?.errorMessages || undefined,
     data: resData?.data || undefined,
     metaData: resData?.metaData || undefined,
     stack: resData?.stack || undefined,

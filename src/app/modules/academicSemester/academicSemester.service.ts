@@ -1,4 +1,4 @@
-import ApiError from "../../utils/errors/ApiError";
+import ApiError from "../../../utils/errors/ApiError";
 import { IAcademicSemester } from "./academicSemester.interface";
 import AcademicSemester from "./academicSemester.model";
 import { semesterTitleCodeMap } from "./academicSemester.utils";
