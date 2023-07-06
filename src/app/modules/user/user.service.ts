@@ -1,5 +1,6 @@
 import config from "../../../config";
-import { ApiError } from "../../../utils/errorHandlers";
+import { ApiError } from "../../utils/errorHandlers";
+
 import { IUser } from "./user.interface";
 import User from "./user.model";
 import { generateUserId } from "./user.utils";

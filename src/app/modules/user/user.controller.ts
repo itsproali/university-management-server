@@ -1,5 +1,5 @@
-import { asyncHandler } from "../../../utils/errorHandlers";
-import sendResponse from "../../../utils/sendResponse";
+import { asyncHandler } from "../../utils/errorHandlers";
+import sendResponse from "../../utils/sendResponse";
 import { createUserService } from "./user.service";
 
 // Create a New User

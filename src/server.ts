@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import app from "./app";
 import config from "./config";
-import connectDB from "./utils/connectDB";
-import logger from "./utils/logger";
+import connectDB from "./app/utils/connectDB";
+import logger from "./app/utils/logger";
 import { Server } from "http";
 
 // Uncaught exception
-process.on("uncaughtException", (err: Error) => {
+process.on("uncaughtException", (err: any) => {
   logger.error("UNCAUGHT EXCEPTION! 💣 Shutting down...");
   logger.error(err.message);
   process.exit(1);
@@ -29,7 +29,7 @@ const run = async () => {
   }
 
   // Unhandled promise rejection
-  process.on("unhandledRejection", (err: Error) => {
+  process.on("unhandledRejection", (err: any) => {
     logger.error("UNHANDLED REJECTION! 💥 Shutting down...");
     logger.error(err.message);
     if (server) {

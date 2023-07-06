@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-import config from "../config";
+import config from "../../config";
 import sendResponse from "./sendResponse";
 import { RequestHandler } from "express-serve-static-core";
 

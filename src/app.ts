@@ -4,7 +4,7 @@ import morgan from "morgan";
 const app: Application = express();
 
 import userRouter from "./app/modules/user/user.route";
-import { globalErrorHandler } from "./utils/errorHandlers";
+import { globalErrorHandler } from "./app/utils/errorHandlers";
 
 // Setup Middleware
 app.use(express.json());
