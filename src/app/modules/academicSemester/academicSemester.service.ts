@@ -1,3 +1,4 @@
+import { IPaginationOptions } from "../../../interface/service";
 import ApiError from "../../../utils/errors/ApiError";
 import { IAcademicSemester } from "./academicSemester.interface";
 import AcademicSemester from "./academicSemester.model";
@@ -13,4 +14,62 @@ export const createSemesterService = async (
 
   const result = await AcademicSemester.create(payload);
   return result;
+};
+
+export const getAllSemesterService = async (
+  options: IPaginationOptions
+): Promise<{
+  data: IAcademicSemester[];
+  totalDocuments: number;
+  totalPages: number;
+}> => {
+  const { page, limit, sortBy, sortOrder } = options;
+  const result = await AcademicSemester.aggregate([
+    {
+      $facet: {
+        data: [
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              year: 1,
+              code: 1,
+              startMonth: 1,
+              endMonth: 1,
+              createdAt: 1,
+              updatedAt: 1,
+            },
+          },
+          {
+            $sort: {
+              [sortBy]: sortOrder,
+            },
+          },
+          {
+            $skip: (page - 1) * limit,
+          },
+          { $limit: limit },
+        ],
+        totalDocuments: [
+          {
+            $count: "total",
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$totalDocuments",
+    },
+    {
+      $project: {
+        data: 1,
+        totalDocuments: "$totalDocuments.total",
+      },
+    },
+  ]);
+
+  return {
+    ...result[0],
+    totalPages: Math.ceil(result[0].totalDocuments / limit),
+  };
 };

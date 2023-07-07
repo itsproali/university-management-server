@@ -21,15 +21,22 @@ app.get("/", (req: Request, res: Response) => {
 // Routes
 app.use("/api/v1", routers);
 
+// Global Error Handler
+app.use(globalErrorHandler);
+
 // 404 Error handler
 app.all("*", (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 404,
     success: false,
     message: "Resource not found",
+    errorMessages: [
+      {
+        path: req.path,
+        message: "Resource not found",
+      },
+    ],
   });
 });
-
-app.use(globalErrorHandler);
 
 export default app;

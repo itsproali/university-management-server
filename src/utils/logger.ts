@@ -30,7 +30,7 @@ const logger: Logger = createLogger({
   ],
 });
 
-if (!config.isDevelopment) {
+if (config.isDevelopment) {
   logger.add(
     new DailyRotateFile({
       filename: "logs/combined-%DATE%.log",
