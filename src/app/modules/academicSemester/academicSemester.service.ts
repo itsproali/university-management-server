@@ -1,3 +1,4 @@
+import { getPagination } from "../../../helpers/paginationHelper";
 import { IPaginationOptions } from "../../../interface/service";
 import ApiError from "../../../utils/errors/ApiError";
 import { IAcademicSemester } from "./academicSemester.interface";
@@ -22,8 +23,10 @@ export const getAllSemesterService = async (
   data: IAcademicSemester[];
   totalDocuments: number;
   totalPages: number;
+  page: number;
+  limit: number;
 }> => {
-  const { page, limit, sortBy, sortOrder } = options;
+  const { page, limit, skip, sortBy, sortOrder } = options;
   const result = await AcademicSemester.aggregate([
     {
       $facet: {
@@ -46,7 +49,7 @@ export const getAllSemesterService = async (
             },
           },
           {
-            $skip: (page - 1) * limit,
+            $skip: skip,
           },
           { $limit: limit },
         ],
@@ -71,5 +74,7 @@ export const getAllSemesterService = async (
   return {
     ...result[0],
     totalPages: Math.ceil(result[0].totalDocuments / limit),
+    page,
+    limit,
   };
 };

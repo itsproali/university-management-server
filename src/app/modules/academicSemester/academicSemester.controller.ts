@@ -1,5 +1,7 @@
+import { getPagination } from "../../../helpers/paginationHelper";
 import asyncHandler from "../../../utils/errors/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
+import { IAcademicSemester } from "./academicSemester.interface";
 import {
   createSemesterService,
   getAllSemesterService,
@@ -8,6 +10,7 @@ import {
 export const createSemester = asyncHandler(async (req, res) => {
   const { ...data } = req.body;
   const result = await createSemesterService(data);
+
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -17,22 +20,16 @@ export const createSemester = asyncHandler(async (req, res) => {
 });
 
 export const getAllSemester = asyncHandler(async (req, res) => {
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
-  const sortBy = (req.query.sortBy as string) || "createdAt";
-  const sortOrder = (req.query.sortOrder as string) === "asc" ? 1 : -1;
+  const options = getPagination(req.query);
 
-  const { data, totalDocuments, totalPages } = await getAllSemesterService({
-    page,
-    limit,
-    sortBy,
-    sortOrder,
-  });
-  sendResponse(res, {
+  const { data, totalDocuments, totalPages, page, limit } =
+    await getAllSemesterService(options);
+
+  sendResponse<IAcademicSemester[]>(res, {
     statusCode: 200,
     success: true,
     message: "Semester retrieved successfully",
-    metaData: {
+    meta: {
       total: totalDocuments,
       totalPages,
       currentPage: page,

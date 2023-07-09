@@ -10,7 +10,7 @@ interface IApiResponse<T> {
   }[];
   data?: T | null;
   stack?: string;
-  metaData?: {
+  meta?: {
     total?: number;
     totalPages?: number;
     currentPage?: number;
@@ -25,8 +25,8 @@ const sendResponse = <T>(res: Response, resData: IApiResponse<T>): void => {
     success: resData?.success,
     message: resData?.message || undefined,
     errorMessages: resData?.errorMessages || undefined,
+    meta: resData?.meta || undefined,
     data: resData?.data || undefined,
-    metaData: resData?.metaData || undefined,
     stack: resData?.stack || undefined,
   };
 
