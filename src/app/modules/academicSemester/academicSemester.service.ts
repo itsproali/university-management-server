@@ -1,10 +1,16 @@
-import { getPagination } from "../../../helpers/paginationHelper";
+import httpStatus from "http-status";
 import { IPaginationOptions } from "../../../interface/service";
 import ApiError from "../../../utils/errors/ApiError";
-import { IAcademicSemester } from "./academicSemester.interface";
+import {
+  IAcademicSemester,
+  IAcademicSemesterFilter,
+} from "./academicSemester.interface";
 import AcademicSemester from "./academicSemester.model";
 import { semesterTitleCodeMap } from "./academicSemester.utils";
-import httpStatus from "http-status";
+import {
+  getAndSearchFilter,
+  getOrSearchFilter,
+} from "../../../helpers/filters";
 
 export const createSemesterService = async (
   payload: IAcademicSemester
@@ -18,7 +24,8 @@ export const createSemesterService = async (
 };
 
 export const getAllSemesterService = async (
-  options: IPaginationOptions
+  options: IPaginationOptions,
+  filters: IAcademicSemesterFilter
 ): Promise<{
   data: IAcademicSemester[];
   totalDocuments: number;
@@ -27,10 +34,19 @@ export const getAllSemesterService = async (
   limit: number;
 }> => {
   const { page, limit, skip, sortBy, sortOrder } = options;
+  const { search, ...others } = filters;
+
+  const searchableFields = ["title", "code", "year"];
+  const orSearchFilter = getOrSearchFilter(search, searchableFields);
+  const andSearchFilter = getAndSearchFilter(others);
+
   const result = await AcademicSemester.aggregate([
     {
       $facet: {
         data: [
+          {
+            $match: { ...orSearchFilter, ...andSearchFilter },
+          },
           {
             $project: {
               _id: 1,

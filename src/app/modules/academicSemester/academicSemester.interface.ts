@@ -9,3 +9,10 @@ export interface IAcademicSemester {
 }
 
 export type IAcademicSemesterModel = Model<IAcademicSemester>;
+
+export interface IAcademicSemesterFilter {
+  search?: string;
+  title?: string;
+  code?: string;
+  year?: string;
+}

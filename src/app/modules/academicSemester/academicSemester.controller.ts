@@ -1,4 +1,5 @@
 import { getPagination } from "../../../helpers/paginationHelper";
+import pick from "../../../helpers/pick";
 import asyncHandler from "../../../utils/errors/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
 import { IAcademicSemester } from "./academicSemester.interface";
@@ -21,9 +22,10 @@ export const createSemester = asyncHandler(async (req, res) => {
 
 export const getAllSemester = asyncHandler(async (req, res) => {
   const options = getPagination(req.query);
+  const filters = pick(req.query, ["search", "title", "code", "year"]);
 
   const { data, totalDocuments, totalPages, page, limit } =
-    await getAllSemesterService(options);
+    await getAllSemesterService(options, filters);
 
   sendResponse<IAcademicSemester[]>(res, {
     statusCode: 200,
