@@ -23,6 +23,15 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = simplified.statusCode;
     message = simplified.message;
     errorMessages = simplified.errorMessages;
+  } else if (err?.name === "CastError") {
+    statusCode = 400;
+    message = "Invalid ID";
+    errorMessages = [
+      {
+        path: err?.path || "",
+        message: "Invalid ID",
+      },
+    ];
   } else if (err instanceof ApiError) {
     statusCode = err.statusCode;
     message = err.message;

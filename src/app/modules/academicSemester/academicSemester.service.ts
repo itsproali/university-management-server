@@ -12,6 +12,7 @@ import {
   getOrSearchFilter,
 } from "../../../helpers/filters";
 
+// Create Semester
 export const createSemesterService = async (
   payload: IAcademicSemester
 ): Promise<IAcademicSemester> => {
@@ -23,6 +24,7 @@ export const createSemesterService = async (
   return result;
 };
 
+// Get All Semester with pagination & Filters
 export const getAllSemesterService = async (
   options: IPaginationOptions,
   filters: IAcademicSemesterFilter
@@ -32,6 +34,7 @@ export const getAllSemesterService = async (
   totalPages: number;
   page: number;
   limit: number;
+  searchResult: number;
 }> => {
   const { page, limit, skip, sortBy, sortOrder } = options;
   const { search, ...others } = filters;
@@ -69,6 +72,12 @@ export const getAllSemesterService = async (
           },
           { $limit: limit },
         ],
+        searchResult: [
+          { $match: { ...orSearchFilter, ...andSearchFilter } },
+          {
+            $count: "total",
+          },
+        ],
         totalDocuments: [
           {
             $count: "total",
@@ -83,6 +92,7 @@ export const getAllSemesterService = async (
       $project: {
         data: 1,
         totalDocuments: "$totalDocuments.total",
+        searchResult: "$searchResult.total",
       },
     },
   ]);
@@ -92,5 +102,55 @@ export const getAllSemesterService = async (
     totalPages: Math.ceil(result[0].totalDocuments / limit),
     page,
     limit,
+    searchResult: result[0].searchResult[0],
   };
+};
+
+// Get Semester by ID
+export const getSemesterByIdService = async (
+  id: string
+): Promise<IAcademicSemester> => {
+  const result = await AcademicSemester.findById(id);
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Semester not found");
+  }
+  return result;
+};
+
+// Update Semester by ID
+export const updateSemesterService = async (
+  id: string,
+  payload: Partial<IAcademicSemester>
+): Promise<IAcademicSemester> => {
+  if (
+    payload?.title &&
+    payload?.code &&
+    semesterTitleCodeMap[payload.title] !== payload.code
+  ) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid semester code");
+  }
+
+  // !---- We can't use findByIdAndUpdate here because it doesn't trigger the pre save hook/method ----!
+  const result = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Semester not found");
+  }
+
+  await result.save();
+
+  return result;
+};
+
+// Delete Semester by ID
+export const deleteSemesterService = async (
+  id: string
+): Promise<IAcademicSemester> => {
+  const result = await AcademicSemester.findByIdAndDelete(id);
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Semester not found");
+  }
+  return result;
 };

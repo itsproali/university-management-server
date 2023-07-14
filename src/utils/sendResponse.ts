@@ -15,6 +15,7 @@ interface IApiResponse<T> {
     totalPages?: number;
     currentPage?: number;
     limit?: number;
+    searchResult?: number;
   };
 }
 
