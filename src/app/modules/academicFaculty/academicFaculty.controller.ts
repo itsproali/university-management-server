@@ -1,4 +1,6 @@
 import httpStatus from "http-status";
+import { getPagination } from "../../../helpers/paginationHelper";
+import pick from "../../../helpers/pick";
 import asyncHandler from "../../../utils/errors/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
 import {
@@ -8,9 +10,6 @@ import {
   getAllAcademicFacultyService,
   updateAcademicFacultyService,
 } from "./academicFaculty.service";
-import pick from "../../../helpers/pick";
-import { paginationFields } from "../../../helpers/paginationFields";
-import { getPagination } from "../../../helpers/paginationHelper";
 
 // Create Academic Faculty
 export const createAcademicFaculty = asyncHandler(async (req, res) => {
