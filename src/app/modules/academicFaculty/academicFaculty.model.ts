@@ -15,7 +15,7 @@ const academicFacultySchema = new Schema<IAcademicFaculty>(
       unique: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true } }
 );
 
 academicFacultySchema.pre("save", async function (next) {

@@ -4,8 +4,8 @@ import morgan from "morgan";
 const app: Application = express();
 
 import routers from "./app/routes/index";
-import sendResponse from "./utils/sendResponse";
 import globalErrorHandler from "./utils/errors/globalErrorHandler";
+import sendResponse from "./utils/sendResponse";
 
 // Setup Middleware
 app.use(express.json());
