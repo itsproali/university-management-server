@@ -10,6 +10,8 @@ import {
   IAcademicFacultyFilters,
 } from "./academicFaculty.interface";
 import AcademicFaculty from "./academicFaculty.model";
+import { IQueryParams, IServiceResponse } from "../../../interface/common";
+import getAggregationStages from "../../../helpers/getAggregationStages";
 
 type GetAllResponse = {
   data: IAcademicFaculty[];
@@ -31,64 +33,16 @@ export const createAcademicFacultyService = async (
 
 // Get All Academic Faculty with Pagination & Filters
 export const getAllAcademicFacultyService = async (
-  paginationOptions: IPaginationOptions,
-  filters: IAcademicFacultyFilters
-): Promise<GetAllResponse> => {
-  const { page, limit, sortBy, sortOrder, skip } = paginationOptions;
-  const { search, ...others } = filters;
-  const searchableFields = ["title"];
-  const orSearchFilter = getOrSearchFilter(search, searchableFields);
-  const andSearchFilter = getAndSearchFilter(others);
+  params: IQueryParams
+): Promise<IServiceResponse<IAcademicFaculty[]>> => {
+  const { page, limit } = params;
+  const stages = getAggregationStages(params, ["title"]);
 
-  const query = { ...orSearchFilter, ...andSearchFilter };
-
-  const result = await AcademicFaculty.aggregate([
-    {
-      $facet: {
-        data: [
-          { $match: query },
-          {
-            $project: {
-              title: 1,
-              createdAt: 1,
-              updatedAt: 1,
-            },
-          },
-          { $sort: { [sortBy]: sortOrder } },
-          { $skip: skip },
-          { $limit: limit },
-        ],
-        searchResult: [
-          { $match: query },
-          {
-            $count: "total",
-          },
-        ],
-        totalDocuments: [
-          {
-            $count: "total",
-          },
-        ],
-      },
-    },
-    {
-      $unwind: "$totalDocuments",
-    },
-    {
-      $unwind: "$searchResult",
-    },
-    {
-      $project: {
-        data: 1,
-        totalDocuments: "$totalDocuments.total",
-        searchResult: "$searchResult.total",
-      },
-    },
-  ]);
+  const result = await AcademicFaculty.aggregate([...stages]);
 
   return {
     ...result[0],
-    totalPages: Math.ceil(result[0].searchResult / limit),
+    totalPages: Math.ceil(result[0]?.totalResult / limit),
     page,
     limit,
   };

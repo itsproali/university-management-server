@@ -90,8 +90,8 @@ const getAggregationStages = (
   const stages: PipelineStage[] = [
     matchStage,
     sortStage,
-    paginationStage,
     fieldSelection,
+    paginationStage,
     unwindTotalDocument,
     unwindTotalResult,
     projectStage,

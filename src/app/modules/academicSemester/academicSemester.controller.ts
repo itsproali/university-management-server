@@ -1,6 +1,5 @@
 import httpStatus from "http-status";
-import { getPagination } from "../../../helpers/paginationHelper";
-import pick from "../../../helpers/pick";
+import { IQueryParams } from "../../../interface/common";
 import ApiError from "../../../utils/errors/ApiError";
 import asyncHandler from "../../../utils/errors/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
@@ -12,7 +11,6 @@ import {
   getSemesterByIdService,
   updateSemesterService,
 } from "./academicSemester.service";
-import { IQueryParams } from "../../../interface/common";
 
 // Create Semester
 export const createSemester = asyncHandler(async (req, res) => {
@@ -29,9 +27,6 @@ export const createSemester = asyncHandler(async (req, res) => {
 
 // Get All Semester with pagination & Filters
 export const getAllSemester = asyncHandler(async (req, res) => {
-  // const options = getPagination(req.query);
-  // const filters = pick(req.query, ["search", "title", "code", "year"]);
-
   const { data, totalDocuments, totalPages, page, limit, totalResult } =
     await getAllSemesterService(req.queryParams as IQueryParams);
 

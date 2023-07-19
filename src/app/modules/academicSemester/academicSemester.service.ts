@@ -1,18 +1,10 @@
 import httpStatus from "http-status";
-import { IPaginationOptions } from "../../../interface/service";
+import getAggregationStages from "../../../helpers/getAggregationStages";
+import { IQueryParams, IServiceResponse } from "../../../interface/common";
 import ApiError from "../../../utils/errors/ApiError";
-import {
-  IAcademicSemester,
-  IAcademicSemesterFilter,
-} from "./academicSemester.interface";
+import { IAcademicSemester } from "./academicSemester.interface";
 import AcademicSemester from "./academicSemester.model";
 import { semesterTitleCodeMap } from "./academicSemester.utils";
-import {
-  getAndSearchFilter,
-  getOrSearchFilter,
-} from "../../../helpers/filters";
-import { IQueryParams, IServiceResponse } from "../../../interface/common";
-import getAggregationStages from "../../../helpers/getAggregationStages";
 
 // Create Semester
 export const createSemesterService = async (
@@ -26,87 +18,22 @@ export const createSemesterService = async (
   return result;
 };
 
-// Get All Semester with pagination & Filters
-// export const getAllSemesterService = async (
-//   options: IPaginationOptions,
-//   filters: IAcademicSemesterFilter
-// ): Promise<{
-//   data: IAcademicSemester[];
-//   totalDocuments: number;
-//   totalPages: number;
-//   page: number;
-//   limit: number;
-//   searchResult: number;
-// }> => {
-//   const { page, limit, skip, sortBy, sortOrder } = options;
-//   const { search, ...others } = filters;
+// get all semesters
+export const getAllSemesterService = async (
+  params: IQueryParams
+): Promise<IServiceResponse<IAcademicSemester[]>> => {
+  const { page, limit } = params;
+  const stages = getAggregationStages(params, ["title", "code", "year"]);
 
-//   const searchableFields = ["title", "code", "year"];
-//   const orSearchFilter = getOrSearchFilter(search, searchableFields);
-//   const andSearchFilter = getAndSearchFilter(others);
+  const result = await AcademicSemester.aggregate([...stages]);
 
-//   const result = await AcademicSemester.aggregate([
-//     {
-//       $facet: {
-//         data: [
-//           {
-//             $match: { ...orSearchFilter, ...andSearchFilter },
-//           },
-//           {
-//             $project: {
-//               _id: 1,
-//               title: 1,
-//               year: 1,
-//               code: 1,
-//               startMonth: 1,
-//               endMonth: 1,
-//               createdAt: 1,
-//               updatedAt: 1,
-//             },
-//           },
-//           {
-//             $sort: {
-//               [sortBy]: sortOrder,
-//             },
-//           },
-//           {
-//             $skip: skip,
-//           },
-//           { $limit: limit },
-//         ],
-//         searchResult: [
-//           { $match: { ...orSearchFilter, ...andSearchFilter } },
-//           {
-//             $count: "total",
-//           },
-//         ],
-//         totalDocuments: [
-//           {
-//             $count: "total",
-//           },
-//         ],
-//       },
-//     },
-//     {
-//       $unwind: "$totalDocuments",
-//     },
-//     {
-//       $project: {
-//         data: 1,
-//         totalDocuments: "$totalDocuments.total",
-//         searchResult: "$searchResult.total",
-//       },
-//     },
-//   ]);
-
-//   return {
-//     ...result[0],
-//     totalPages: Math.ceil(result[0].totalDocuments / limit),
-//     page,
-//     limit,
-//     searchResult: result[0].searchResult[0],
-//   };
-// };
+  return {
+    ...result[0],
+    totalPages: Math.ceil(result[0]?.totalResult / limit),
+    page,
+    limit,
+  };
+};
 
 // Get Semester by ID
 export const getSemesterByIdService = async (
@@ -155,21 +82,4 @@ export const deleteSemesterService = async (
     throw new ApiError(httpStatus.NOT_FOUND, "Semester not found");
   }
   return result;
-};
-
-// get all semesters
-export const getAllSemesterService = async (
-  params: IQueryParams
-): Promise<IServiceResponse<IAcademicSemester[]>> => {
-  const { page, limit } = params;
-  const stages = getAggregationStages(params, ["title", "code", "year"]);
-
-  const result = await AcademicSemester.aggregate([...stages]);
-
-  return {
-    ...result[0],
-    totalPages: Math.ceil(result[0]?.totalResult / limit),
-    page,
-    limit,
-  };
 };

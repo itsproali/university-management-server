@@ -1,6 +1,5 @@
 import httpStatus from "http-status";
-import { getPagination } from "../../../helpers/paginationHelper";
-import pick from "../../../helpers/pick";
+import { IQueryParams } from "../../../interface/common";
 import asyncHandler from "../../../utils/errors/asyncHandler";
 import sendResponse from "../../../utils/sendResponse";
 import {
@@ -26,11 +25,8 @@ export const createAcademicFaculty = asyncHandler(async (req, res) => {
 
 // Get All Academic Faculty with Pagination and Filters
 export const getAllAcademicFaculty = asyncHandler(async (req, res) => {
-  const paginationOptions = getPagination(req.query);
-  const filters = pick(req.query, ["search", "title"]);
-
-  const { data, page, limit, totalDocuments, totalPages, searchResult } =
-    await getAllAcademicFacultyService(paginationOptions, filters);
+  const { data, page, limit, totalDocuments, totalPages, totalResult } =
+    await getAllAcademicFacultyService(req.queryParams as IQueryParams);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -38,7 +34,7 @@ export const getAllAcademicFaculty = asyncHandler(async (req, res) => {
     message: "Faculty retrieved successfully",
     meta: {
       total: totalDocuments,
-      totalResult: searchResult,
+      totalResult,
       totalPages,
       currentPage: page,
       limit,
