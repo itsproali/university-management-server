@@ -30,7 +30,7 @@ export type IStudent = {
   id: string;
   name: UserName; //embedded object
   gender: "male" | "female";
-  dateOfBirth: string;
+  dateOfBirth: Date;
   email: string;
   contactNo: string;
   emergencyContactNo: string;

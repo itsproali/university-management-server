@@ -9,4 +9,6 @@ export default {
   DB_URI: process.env.DB_URI || "mongodb://localhost:27017/university",
   DB_URI_PROD: process.env.DB_URI_PROD as string,
   DEFAULT_STUDENT_PASS: process.env.DEFAULT_STUDENT_PASS || "student123",
+  DEFAULT_FACULTY_PASS: process.env.DEFAULT_FACULTY_PASS || "faculty123",
+  DEFAULT_ADMIN_PASS: process.env.DEFAULT_ADMIN_PASS || "admin123",
 };
