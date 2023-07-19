@@ -38,7 +38,7 @@ export const getAllAcademicDepartment = asyncHandler(async (req, res) => {
     message: "Department retrieved successfully",
     meta: {
       total: totalDocuments,
-      searchResult,
+      totalResult: searchResult,
       totalPages,
       currentPage: page,
       limit,

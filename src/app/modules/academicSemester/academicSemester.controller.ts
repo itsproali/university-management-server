@@ -12,6 +12,7 @@ import {
   getSemesterByIdService,
   updateSemesterService,
 } from "./academicSemester.service";
+import { IQueryParams } from "../../../interface/common";
 
 // Create Semester
 export const createSemester = asyncHandler(async (req, res) => {
@@ -28,11 +29,11 @@ export const createSemester = asyncHandler(async (req, res) => {
 
 // Get All Semester with pagination & Filters
 export const getAllSemester = asyncHandler(async (req, res) => {
-  const options = getPagination(req.query);
-  const filters = pick(req.query, ["search", "title", "code", "year"]);
+  // const options = getPagination(req.query);
+  // const filters = pick(req.query, ["search", "title", "code", "year"]);
 
-  const { data, totalDocuments, totalPages, page, limit, searchResult } =
-    await getAllSemesterService(options, filters);
+  const { data, totalDocuments, totalPages, page, limit, totalResult } =
+    await getAllSemesterService(req.queryParams as IQueryParams);
 
   sendResponse<IAcademicSemester[]>(res, {
     statusCode: 200,
@@ -43,7 +44,7 @@ export const getAllSemester = asyncHandler(async (req, res) => {
       totalPages,
       currentPage: page,
       limit,
-      searchResult,
+      totalResult,
     },
     data,
   });

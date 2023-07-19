@@ -1,75 +1,90 @@
 import { PipelineStage } from "mongoose";
-
-type IQueries = {
-  page: number;
-  limit: number;
-  sortBy: string;
-  sortOrder: 1 | -1;
-  filter: object;
-  search?: string;
-  fields: { [key: string]: number };
-};
+import { IQueryParams } from "../interface/common";
 
 const getAggregationStages = (
-  queries: IQueries,
+  queries: IQueryParams,
   searchFields: string[]
 ): PipelineStage[] => {
   // Select Which field want to get or remove
   const fieldSelection: PipelineStage =
-    Object.keys(queries.fields).length > 0
+    queries.fields && Object.keys(queries.fields).length > 0
       ? {
           $project: queries.fields,
         }
       : { $addFields: {} };
 
   // Searching stage to search in all fields
-  const searchStage = searchFields.map((field) => {
-    return {
-      [field]: {
-        $regex: queries.search,
-        $options: "i",
-      },
-    };
-  });
+  const orSearch =
+    queries.search &&
+    queries.search !== "" &&
+    queries.search !== "undefined" &&
+    searchFields.length
+      ? searchFields.map((field) => {
+          return {
+            [field]: {
+              $regex: queries.search,
+              $options: "i",
+            },
+          };
+        })
+      : [{ _id: { $exists: true } }];
+
+  // Searching stage to search in specific fields
+  const andSearch =
+    queries.filters && Object.keys(queries.filters).length
+      ? Object.entries(queries.filters || {}).map(([key, value]) => ({
+          [key]: {
+            $regex: value,
+            $options: "i",
+          },
+        }))
+      : [{ _id: { $exists: true } }];
 
   // Match stage to filter by field
   const matchStage: PipelineStage = {
-    $match: {
-      $and: [queries.filter, { $or: searchStage }],
-    },
+    $match: { $or: orSearch, $and: andSearch },
   };
 
   // Sorting stage to sort by field
-  const sortStage: PipelineStage = {
-    $sort: {
-      [queries.sortBy]: queries.sortOrder,
-    },
-  };
+  const sortStage: PipelineStage =
+    queries.sortBy && queries.sortOrder
+      ? {
+          $sort: {
+            [queries.sortBy]: queries.sortOrder,
+          },
+        }
+      : { $addFields: {} };
 
   // Pagination stage to limit and skip
   const paginationStage: PipelineStage = {
     $facet: {
       data: [
-        { $skip: queries.page * queries.limit },
-        { $limit: queries.limit },
+        queries.page && queries.limit
+          ? { $skip: (queries.page - 1) * queries.limit }
+          : { $addFields: {} },
+        queries.limit ? { $limit: queries.limit } : { $addFields: {} },
       ],
       totalDocuments: [{ $count: "total" }],
       totalResult: [matchStage, { $count: "total" }],
-      totalPages: [
-        {
-          $project: {
-            totalPages: {
-              $ceil: {
-                $divide: ["$totalResult.total", queries.limit],
-              },
-            },
-          },
-        },
-      ],
     },
   };
 
   // Unwind stage to get data from array
+  const unwindTotalDocument: PipelineStage = {
+    $unwind: "$totalDocuments",
+  };
+  const unwindTotalResult: PipelineStage = {
+    $unwind: "$totalResult",
+  };
+
+  // Project stage to get data from array
+  const projectStage: PipelineStage = {
+    $project: {
+      data: 1,
+      totalDocuments: "$totalDocuments.total",
+      totalResult: "$totalResult.total",
+    },
+  };
 
   // Add all stages in array
   const stages: PipelineStage[] = [
@@ -77,6 +92,9 @@ const getAggregationStages = (
     sortStage,
     paginationStage,
     fieldSelection,
+    unwindTotalDocument,
+    unwindTotalResult,
+    projectStage,
   ];
 
   return stages;

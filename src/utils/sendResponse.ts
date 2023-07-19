@@ -12,10 +12,10 @@ interface IApiResponse<T> {
   stack?: string;
   meta?: {
     total?: number;
+    totalResult?: number;
     totalPages?: number;
     currentPage?: number;
     limit?: number;
-    searchResult?: number;
   };
 }
 
@@ -26,7 +26,14 @@ const sendResponse = <T>(res: Response, resData: IApiResponse<T>): void => {
     success: resData?.success,
     message: resData?.message || undefined,
     errorMessages: resData?.errorMessages || undefined,
-    meta: resData?.meta || undefined,
+    meta:
+      {
+        total: resData?.meta?.total || undefined,
+        totalResult: resData?.meta?.totalResult || undefined,
+        totalPages: resData?.meta?.totalPages || undefined,
+        currentPage: resData?.meta?.currentPage || undefined,
+        limit: resData?.meta?.limit || undefined,
+      } || undefined,
     data: resData?.data || undefined,
     stack: resData?.stack || undefined,
   };

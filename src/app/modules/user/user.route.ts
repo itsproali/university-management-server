@@ -1,10 +1,10 @@
 import express from "express";
+import validateRequest from "../../middleware/validateRequest";
 import {
   createAdminUser,
   createFacultyUser,
   createStudentUser,
 } from "./user.controller";
-import validateRequest from "../../middleware/validateRequest";
 import {
   createAdminZodSchema,
   createFacultyZodSchema,

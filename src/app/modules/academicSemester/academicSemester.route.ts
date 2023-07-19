@@ -11,6 +11,7 @@ import {
   getSemesterById,
   updateSemester,
 } from "./academicSemester.controller";
+import queryParams from "../../middleware/queryParams";
 const router = express.Router();
 
 router.post(
@@ -18,7 +19,7 @@ router.post(
   validateRequest(createAcademicSemesterZodSchema),
   createSemester
 );
-router.get("/all", getAllSemester);
+router.get("/all", queryParams, getAllSemester);
 
 router.get("/:id", getSemesterById);
 

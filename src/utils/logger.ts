@@ -37,7 +37,7 @@ if (config.isDevelopment) {
       datePattern: "YYYY-MM-DD-HH",
       zippedArchive: true,
       maxSize: "20m",
-      maxFiles: "1d",
+      maxFiles: "1",
       level: "info",
     })
   );
@@ -47,7 +47,7 @@ if (config.isDevelopment) {
       datePattern: "YYYY-MM-DD-HH",
       zippedArchive: true,
       maxSize: "20m",
-      maxFiles: "1d",
+      maxFiles: "1",
       level: "error",
     })
   );
