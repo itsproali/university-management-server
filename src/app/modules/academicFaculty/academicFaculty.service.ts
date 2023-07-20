@@ -1,26 +1,9 @@
 import httpStatus from "http-status";
-import {
-  getAndSearchFilter,
-  getOrSearchFilter,
-} from "../../../helpers/filters";
-import { IPaginationOptions } from "../../../interface/service";
-import ApiError from "../../../utils/errors/ApiError";
-import {
-  IAcademicFaculty,
-  IAcademicFacultyFilters,
-} from "./academicFaculty.interface";
-import AcademicFaculty from "./academicFaculty.model";
-import { IQueryParams, IServiceResponse } from "../../../interface/common";
 import getAggregationStages from "../../../helpers/getAggregationStages";
-
-type GetAllResponse = {
-  data: IAcademicFaculty[];
-  totalDocuments: number;
-  totalPages: number;
-  page: number;
-  limit: number;
-  searchResult: number;
-};
+import { IQueryParams, IServiceResponse } from "../../../interface/common";
+import ApiError from "../../../utils/errors/ApiError";
+import { IAcademicFaculty } from "./academicFaculty.interface";
+import AcademicFaculty from "./academicFaculty.model";
 
 // Create a new Academic Faculty
 export const createAcademicFacultyService = async (
