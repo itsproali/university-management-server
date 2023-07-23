@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import fs from "fs";
 import { Logger, createLogger, format, transports } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";

@@ -3,6 +3,10 @@ import mongoose, { Types } from "mongoose";
 import config from "../../../config";
 import ApiError from "../../../utils/errors/ApiError";
 import AcademicSemester from "../academicSemester/academicSemester.model";
+import { IAdmin } from "../admin/admin.interface";
+import Admin from "../admin/admin.model";
+import { IFaculty } from "../faculty/faculty.interface";
+import Faculty from "../faculty/faculty.model";
 import { IStudent } from "../student/student.interface";
 import Student from "../student/student.model";
 import { IUser } from "./user.interface";
@@ -12,10 +16,6 @@ import {
   generateFacultyId,
   generateStudentId,
 } from "./user.utils";
-import Faculty from "../faculty/faculty.model";
-import { IFaculty } from "../faculty/faculty.interface";
-import { IAdmin } from "../admin/admin.interface";
-import Admin from "../admin/admin.model";
 
 // Create student user service
 export const createStudentService = async (
@@ -65,7 +65,7 @@ export const createStudentService = async (
     // End transaction
     await session.commitTransaction();
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
     throw error;
   } finally {
     session.endSession();
@@ -121,7 +121,7 @@ export const createFacultyService = async (
     result = newUser[0];
     await session.commitTransaction();
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
     throw error;
   } finally {
     session.endSession();
@@ -174,7 +174,7 @@ export const createAdminService = async (adminInfo: IAdmin, user: IUser) => {
     result = newUser[0];
     await session.commitTransaction();
   } catch (error) {
-    session.abortTransaction();
+    await session.abortTransaction();
     throw error;
   } finally {
     session.endSession();

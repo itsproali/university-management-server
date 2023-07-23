@@ -7,8 +7,10 @@ import { studentRouter } from "../modules/student/student.route";
 import { facultyRouter } from "../modules/faculty/faculty.route";
 import { managementDepartmentRouter } from "../modules/managementDepartment/managementDepartment.route";
 import { adminRouter } from "../modules/admin/admin.route";
+import { authRouter } from "../modules/auth/auth.route";
 const router = express.Router();
 
+router.use("/auth", authRouter);
 router.use("/user", userRouter);
 router.use("/academic-semester", academicSemesterRouter);
 router.use("/academic-faculty", academicFacultyRouter);

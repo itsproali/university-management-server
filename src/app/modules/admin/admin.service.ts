@@ -32,7 +32,7 @@ export const getAllAdminService = async (
 
 // Get Admin by id service
 export const getAdminByIdService = async (id: string): Promise<IAdmin> => {
-  const result = await Admin.findById(id);
+  const result = await Admin.findOne({ id });
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, "Admin not found");
   }

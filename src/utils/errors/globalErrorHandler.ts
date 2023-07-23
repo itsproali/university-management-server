@@ -32,6 +32,15 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
         message: "Invalid ID",
       },
     ];
+  } else if (err.code === 11000) {
+    statusCode = 400;
+    message = "Duplicate field value entered";
+    errorMessages = [
+      {
+        path: Object.keys(err.keyValue)[0],
+        message: "Duplicate field value entered",
+      },
+    ];
   } else if (err instanceof ApiError) {
     statusCode = err.statusCode;
     message = err.message;

@@ -1,8 +1,10 @@
 import { Schema, model } from "mongoose";
 import { IUser, IUserMethods, UserModel } from "./user.interface";
+import config from "../../../config";
+import bcrypt from "bcrypt";
 
 // User Schema
-const userSchema: Schema = new Schema<IUser, UserModel, IUserMethods>(
+const userSchema = new Schema<IUser, UserModel, IUserMethods>(
   {
     id: {
       type: String,
@@ -13,6 +15,12 @@ const userSchema: Schema = new Schema<IUser, UserModel, IUserMethods>(
     password: {
       type: String,
       required: true,
+      select: 0,
+    },
+
+    needPasswordChange: {
+      type: Boolean,
+      default: true,
     },
 
     role: {
@@ -44,9 +52,17 @@ const userSchema: Schema = new Schema<IUser, UserModel, IUserMethods>(
 );
 
 // Methods
-userSchema.method("getRole", function getRole() {
-  return this.role;
+userSchema.pre("save", async function (next) {
+  this.password = await bcrypt.hash(this.password, config.BCRYPT_SALT_ROUNDS);
+
+  next();
 });
+
+userSchema.methods.comparePassword = async function comparePassword(
+  password: string
+) {
+  return await bcrypt.compare(password, this.password);
+};
 
 // User Model
 const User = model<IUser, UserModel>("User", userSchema);

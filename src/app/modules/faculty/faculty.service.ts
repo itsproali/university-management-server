@@ -32,7 +32,7 @@ export const getAllFacultiesService = async (
 
 // Get Faculty by id service
 export const getFacultyByIdService = async (id: string): Promise<IFaculty> => {
-  const result = await Faculty.findById(id);
+  const result = await Faculty.findOne({ id });
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, "Faculty not found");
   }
