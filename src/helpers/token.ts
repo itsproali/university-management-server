@@ -2,7 +2,7 @@ import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import config from "../config";
 
 export const createToken = (
-  payload: object,
+  payload: object, // { userId: string; role: string }
   secret: Secret = config.JWT_SECRET,
   expiresIn: string = config.JWT_EXPIRES_IN
 ): string => {

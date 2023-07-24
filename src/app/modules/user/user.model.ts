@@ -23,6 +23,11 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       default: true,
     },
 
+    passwordChangedAt: {
+      type: Date,
+      default: null,
+    },
+
     role: {
       type: String,
       required: true,

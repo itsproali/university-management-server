@@ -12,6 +12,8 @@ import {
   updateSemester,
 } from "./academicSemester.controller";
 import queryParams from "../../middleware/queryParams";
+import { ENUM_USER_ROLE } from "../../../enums/user.enum";
+import authGuard from "../../middleware/authGuard";
 const router = express.Router();
 
 router.post(
@@ -19,7 +21,12 @@ router.post(
   validateRequest(createAcademicSemesterZodSchema),
   createSemester
 );
-router.get("/all", queryParams, getAllSemester);
+router.get(
+  "/all",
+  authGuard(ENUM_USER_ROLE.STUDENT),
+  queryParams,
+  getAllSemester
+);
 
 router.get("/:id", getSemesterById);
 

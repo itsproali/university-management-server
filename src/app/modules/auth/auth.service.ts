@@ -77,3 +77,31 @@ export const refreshTokenService = async (
     accessToken,
   };
 };
+
+// change password service
+export const changePasswordService = async (payload: {
+  userId: string;
+  oldPassword: string;
+  newPassword: string;
+}): Promise<void> => {
+  const { userId, oldPassword, newPassword } = payload;
+
+  const user = await User.findOne({ id: userId }, { password: 1 });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
+  }
+
+  const isPasswordMatch = await user.comparePassword(oldPassword);
+
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect Old password");
+  }
+
+  user.password = newPassword;
+  user.needPasswordChange = false;
+  user.passwordChangedAt = new Date();
+  await user.save();
+
+  return;
+};

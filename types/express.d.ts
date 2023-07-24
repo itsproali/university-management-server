@@ -1,17 +1,12 @@
 import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
+import { IQueryParams } from "../src/interface/common";
 
 declare global {
   namespace Express {
     export interface Request {
-      queryParams: Partial<{
-        page: number;
-        limit: number;
-        search: string;
-        sortBy: string;
-        sortOrder: 1 | -1;
-        filters: { [key: string]: number | string | boolean };
-        fields?: { [key: string]: number };
-      }>;
+      queryParams: Partial<IQueryParams>;
+      user: JwtPayload;
     }
   }
 }
