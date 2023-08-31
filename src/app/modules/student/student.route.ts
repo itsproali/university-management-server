@@ -10,7 +10,7 @@ import validateRequest from "../../middleware/validateRequest";
 import { updateStudentZodSchema } from "./student.validation";
 const router = express.Router();
 
-router.get("/all", queryParams, getAllStudents);
+router.get("/", queryParams, getAllStudents);
 
 router.get("/:id", getStudentById);
 

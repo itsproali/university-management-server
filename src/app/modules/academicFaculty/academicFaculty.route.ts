@@ -11,12 +11,12 @@ import { createAcademicFacultyZodSchema } from "./academicFaculty.validation";
 const router = express.Router();
 
 router.post(
-  "/create",
+  "/",
   validateRequest(createAcademicFacultyZodSchema),
   createAcademicFaculty
 );
 
-router.get("/all", getAllAcademicFaculty);
+router.get("/", getAllAcademicFaculty);
 
 router.get("/:id", getAcademicFaculty);
 

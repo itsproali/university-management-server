@@ -21,7 +21,7 @@ router.post(
   createManagementDepartment
 );
 
-router.get("/all", queryParams, getAllManagementDepartments);
+router.get("/", queryParams, getAllManagementDepartments);
 
 router.get("/:id", getManagementDepartmentById);
 

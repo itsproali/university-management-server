@@ -11,7 +11,7 @@ import { updateAdminZodSchema } from "./admin.validation";
 
 const router = express.Router();
 
-router.get("/all", queryParams, getAllAdmin);
+router.get("/", queryParams, getAllAdmin);
 
 router.get("/:id", getAdminById);
 

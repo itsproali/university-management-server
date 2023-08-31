@@ -11,7 +11,7 @@ import { updateFacultyZodSchema } from "./faculty.validation";
 
 const router = express.Router();
 
-router.get("/all", queryParams, getAllFaculties);
+router.get("/", queryParams, getAllFaculties);
 
 router.get("/:id", getFacultyById);
 

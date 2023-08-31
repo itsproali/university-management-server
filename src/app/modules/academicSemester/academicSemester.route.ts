@@ -17,16 +17,11 @@ import authGuard from "../../middleware/authGuard";
 const router = express.Router();
 
 router.post(
-  "/create",
+  "/",
   validateRequest(createAcademicSemesterZodSchema),
   createSemester
 );
-router.get(
-  "/all",
-  authGuard(ENUM_USER_ROLE.STUDENT),
-  queryParams,
-  getAllSemester
-);
+router.get("/", authGuard(ENUM_USER_ROLE.STUDENT), queryParams, getAllSemester);
 
 router.get("/:id", getSemesterById);
 
