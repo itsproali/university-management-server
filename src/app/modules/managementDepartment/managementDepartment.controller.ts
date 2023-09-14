@@ -66,7 +66,7 @@ export const updateManagementDepartment = asyncHandler(async (req, res) => {
   sendResponse<IManagementDepartment>(res, {
     statusCode: 200,
     success: true,
-    message: "Faculty updated successfully",
+    message: "Management Department updated successfully",
     data: result,
   });
 });
