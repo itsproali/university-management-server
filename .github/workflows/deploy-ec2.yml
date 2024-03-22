@@ -1,0 +1,27 @@
+name: Deploy Docker image to AWS
+
+on:
+  workflow_run:
+    workflows: ["Publish to Docker ---------------"] # Need to be same as the name of the previous workflow
+    types: [completed]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    environment: production
+
+    steps:
+      - name: Stop the old container
+        run: docker stop university_auth || true
+
+      - name: Delete the old container
+        run: docker rm university_auth || true
+
+      - name: Delete the old image
+        run: docker rmi ${{secrets.DOCKER_USERNAME}}/university_auth:latest || true
+
+      - name: Pull the image from dockerhub
+        run: docker pull ${{secrets.DOCKER_USERNAME}}/university_auth:latest
+
+      - name: Run the image
+        run: docker run -d -p "${{vars.PORT}}:${{vars.PORT}}" ${{secrets.DOCKER_USERNAME}}/university_auth:latest
