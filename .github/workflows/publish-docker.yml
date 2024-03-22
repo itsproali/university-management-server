@@ -17,3 +17,6 @@ jobs:
 
       - name: Build Docker Image
         run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USERNAME}}/university_auth:latest
+
+      - name: Push Docker Image
+        run: docker push ${{secrets.DOCKER_USERNAME}}/university_auth:latest
