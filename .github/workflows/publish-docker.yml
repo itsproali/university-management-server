@@ -16,12 +16,10 @@ jobs:
       - name: Create .env file
         # Set All Environment Variables to .env file
         run: |
-          echo "# Environment Variables" > .env
-          env | grep -E "^[A-Za-z0-9_]+" | while read -r line ; do
-              name=$(echo "$line" | cut -d= -f1)
-              value=$(echo "$line" | cut -d= -f2-)
-              echo "$name=\"$value\"" >> .env
-          done
+          # Remove existing .env file if present
+          rm -f .env
+          # Write all environment variables to .env file
+          env > .env
 
       # Display .env file content for verification (optional)
       - name: Display .env file
