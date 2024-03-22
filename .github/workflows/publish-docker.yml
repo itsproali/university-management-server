@@ -14,8 +14,13 @@ jobs:
 
       # take env from github environment variables and create .env file
       # - name: Create .env file for docker
+      # run: |
+      #   echo "Writing all environment variables to .env file"
+      #   echo "NODE_ENV=${{vars.NODE_ENV}}" >> .env
+      #   echo "PORT=${{vars.PORT}}" >> .env
       - name: Create .env file
-        run: echo "${{vars}}" >> .env
+        run: echo "NODE_ENV=${{vars.NODE_ENV}}" >> .env
+          echo "PORT=${{vars.PORT}}" >> .env
 
       # Display .env file content for verification (optional)
       - name: Display .env file
