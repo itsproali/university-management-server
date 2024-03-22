@@ -29,10 +29,6 @@ jobs:
           echo "JWT_REFRESH_SECRET=${{vars.JWT_REFRESH_SECRET}}" >> .env
           echo "JWT_REFRESH_EXPIRES_IN=${{vars.JWT_REFRESH_EXPIRES_IN}}" >> .env
 
-      # Display .env file content for verification (optional)
-      - name: Display .env file
-        run: cat .env
-
       - name: Login to Docker
         run: echo "${{secrets.DOCKER_ACCESS_TOKEN}}" | docker login -u "${{secrets.DOCKER_USERNAME}}" --password-stdin
 
