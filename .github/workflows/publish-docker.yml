@@ -17,6 +17,7 @@ jobs:
           echo "NODE_ENV=${{vars.NODE_ENV}}" >> .env
           echo "PORT=${{secrets.PORT}}" >> .env
           echo "DB_URI_PROD=$DB_URI_PROD" >> .env
+          echo "DB_URI=${{env.DB_URI}}" >> .env
 
       # Display .env file content for verification (optional)
       - name: Display .env file
