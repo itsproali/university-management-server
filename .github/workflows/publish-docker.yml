@@ -19,7 +19,7 @@ jobs:
           # Remove existing .env file if present
           rm -f .env
           # Write all environment variables to .env file
-          env > .env
+          vars > .env
 
       # Display .env file content for verification (optional)
       - name: Display .env file
